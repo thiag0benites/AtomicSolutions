@@ -1,0 +1,103 @@
+package app.views;
+
+import java.awt.Color;
+import java.awt.EventQueue;
+import java.awt.Font;
+
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
+
+public class ViewSearchMovie {
+
+	private JFrame frmSearch;
+	private JTextField txtMovieName;
+	private JTextField txtDirectorName;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					ViewSearchMovie window = new ViewSearchMovie();
+					window.frmSearch.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public ViewSearchMovie() {
+		initialize();
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		frmSearch = new JFrame();
+		frmSearch.setResizable(false);
+		frmSearch.setTitle("Pesquisa Filmes");
+		frmSearch.setBounds(100, 100, 713, 482);
+		frmSearch.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmSearch.getContentPane().setLayout(null);
+		
+		JPanel pnlMovie = new JPanel();
+		pnlMovie.setBounds(24, 23, 324, 96);
+		frmSearch.getContentPane().add(pnlMovie);
+		pnlMovie.setLayout(null);
+		
+		JLabel lblMovieName = new JLabel("Nome:");
+		lblMovieName.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblMovieName.setBounds(10, 21, 42, 14);
+		pnlMovie.add(lblMovieName);
+		
+		JLabel lblReleaseYear = new JLabel("Ano de Lançamento:");
+		lblReleaseYear.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblReleaseYear.setBounds(10, 55, 127, 14);
+		pnlMovie.add(lblReleaseYear);
+		
+		// Movie
+		txtMovieName = new JTextField();
+		txtMovieName.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		txtMovieName.setColumns(10);
+		txtMovieName.setBounds(52, 18, 259, 20);
+		pnlMovie.add(txtMovieName);
+		
+		JComboBox cboMovieYear = new JComboBox<Object>();
+		cboMovieYear.setModel(new DefaultComboBoxModel<Object>(support.listYears()));
+		cboMovieYear.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		cboMovieYear.setBounds(147, 52, 164, 20);
+		pnlMovie.add(cboMovieYear);
+		
+		// Diretor
+		JPanel pnlDirector = new JPanel();
+		pnlDirector.setBorder(new LineBorder(Color.LIGHT_GRAY));
+		pnlDirector.setBounds(366, 23, 329, 96);
+		frmSearch.getContentPane().add(pnlDirector);
+		pnlDirector.setLayout(null);
+		
+		JLabel lblDirectorName = new JLabel("Nome:");
+		lblDirectorName.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblDirectorName.setBounds(10, 24, 46, 14);
+		pnlDirector.add(lblDirectorName);
+		
+		txtDirectorName = new JTextField();
+		txtDirectorName.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		txtDirectorName.setBounds(52, 22, 259, 20);
+		pnlDirector.add(txtDirectorName);
+		txtDirectorName.setColumns(10);
+		
+
+	}
+}

@@ -1,0 +1,290 @@
+package app.views;
+
+import java.awt.Color;
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableModel;
+
+import org.junit.runner.JUnitCore;
+
+import app.help.*;
+import app.model.*;
+import app.search.*;
+
+public class ViewSearchMovie {
+
+	private JFrame frmSearch;
+	private JTextField txtMovieName;
+	private JTextField txtDirectorName;
+	private JTable tblSearch;
+	
+	private int currentMonth;
+	private int currentYear;
+	
+	private DefaultTableModel model = new DefaultTableModel();
+	private support support = new support();
+	
+	private static int currentTableRow;
+	private static tableModel tblModel = new tableModel();
+	private static report report = new report();
+	
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					ViewSearchMovie window = new ViewSearchMovie();
+					window.frmSearch.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public ViewSearchMovie() {
+		initialize();
+		initialize();
+		initComponent(); //Centraliza tela
+		this.currentMonth = 1;
+		this.currentYear = 2019;
+	}
+	
+	public static tableModel getTblModel() {
+		return tblModel;
+	}
+	
+	public int getCurrentTableRow() {
+		return currentTableRow;
+	}
+	
+	public static report getReport() {
+		return report;
+	}
+	
+	public void initComponent() {
+		this.frmSearch.setLocationRelativeTo(null);
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		frmSearch = new JFrame();
+		frmSearch.setResizable(false);
+		frmSearch.setTitle("Pesquisa Filmes");
+		frmSearch.setBounds(100, 100, 725, 482);
+		frmSearch.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmSearch.getContentPane().setLayout(null);
+		
+		JPanel pnlMovie = new JPanel();
+		pnlMovie.setBounds(24, 23, 324, 96);
+		frmSearch.getContentPane().add(pnlMovie);
+		pnlMovie.setLayout(null);
+		
+		JLabel lblMovieName = new JLabel("Nome:");
+		lblMovieName.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblMovieName.setBounds(10, 21, 42, 14);
+		pnlMovie.add(lblMovieName);
+		
+		JLabel lblReleaseYear = new JLabel("Ano de Lançamento:");
+		lblReleaseYear.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblReleaseYear.setBounds(10, 55, 127, 14);
+		pnlMovie.add(lblReleaseYear);
+		
+		// Movie
+		txtMovieName = new JTextField();
+		txtMovieName.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		txtMovieName.setColumns(10);
+		txtMovieName.setBounds(52, 18, 259, 20);
+		pnlMovie.add(txtMovieName);
+		
+		JComboBox cboMovieYear = new JComboBox<Object>();
+		cboMovieYear.setModel(new DefaultComboBoxModel<Object>(support.listYears()));
+		cboMovieYear.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		cboMovieYear.setBounds(147, 52, 164, 20);
+		pnlMovie.add(cboMovieYear);
+		
+		// Diretor
+		JPanel pnlDirector = new JPanel();
+		pnlDirector.setBorder(new LineBorder(Color.LIGHT_GRAY));
+		pnlDirector.setBounds(366, 23, 329, 96);
+		frmSearch.getContentPane().add(pnlDirector);
+		pnlDirector.setLayout(null);
+		
+		JLabel lblDirectorName = new JLabel("Nome:");
+		lblDirectorName.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblDirectorName.setBounds(10, 24, 46, 14);
+		pnlDirector.add(lblDirectorName);
+		
+		txtDirectorName = new JTextField();
+		txtDirectorName.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		txtDirectorName.setBounds(52, 22, 259, 20);
+		pnlDirector.add(txtDirectorName);
+		txtDirectorName.setColumns(10);
+		
+		JLabel lblDateBirth = new JLabel("Data de Nascimento:");
+		lblDateBirth.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblDateBirth.setBounds(10, 55, 119, 14);
+		pnlDirector.add(lblDateBirth);
+		
+		JComboBox cboDay = new JComboBox();
+		cboDay.setModel(new DefaultComboBoxModel(support.listDay(currentMonth,currentYear)));
+		cboDay.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		cboDay.setBounds(139, 53, 39, 20);
+		pnlDirector.add(cboDay);
+		
+		JComboBox cboYear = new JComboBox();
+		cboYear.addItemListener(new ItemListener() {
+			
+			public void itemStateChanged(ItemEvent event) {
+				currentYear = Integer.parseInt(cboYear.getSelectedItem().toString());
+				cboDay.setModel(new DefaultComboBoxModel(support.listDay(currentMonth, currentYear)));
+			}
+			
+		});
+		
+		JComboBox cboMonth = new JComboBox();		
+		cboMonth.addItemListener(new ItemListener() {
+			
+			public void itemStateChanged(ItemEvent event) {
+				if (event.getStateChange() == ItemEvent.SELECTED) {
+					currentMonth = Integer.parseInt(cboMonth.getSelectedItem().toString());
+					cboDay.setModel(new DefaultComboBoxModel(support.listDay(currentMonth, currentYear)));
+				}
+			}
+			
+		});
+		
+		cboMonth.setModel(new DefaultComboBoxModel(support.listMonth()));
+		cboMonth.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		cboMonth.setBounds(188, 53, 39, 20);
+		pnlDirector.add(cboMonth);
+		
+		cboYear.setModel(new DefaultComboBoxModel(support.listYears()));
+		cboYear.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		cboYear.setBounds(237, 53, 74, 20);
+		pnlDirector.add(cboYear);
+		
+		// Button Search
+		JButton btnSearch = new JButton("Buscar");
+		btnSearch.setEnabled(false);
+		btnSearch.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				report.reportCreate();
+				report.reportHead();
+				
+				//Chama metodos junit / selenium
+				for (int i = 0; i < tblModel.numTableRows(); i++) {
+					currentTableRow = i;
+					JUnitCore.runClasses(search.class);
+				}
+				
+				report.reportFooter();
+				
+				int reply = JOptionPane.showConfirmDialog(null, "Busca realizada! \nDeseja abrir relatório?", "Busca", JOptionPane.YES_NO_OPTION);
+				
+				if (reply == JOptionPane.YES_OPTION) {
+					support.openReport();
+				}
+				
+			}
+		});
+		btnSearch.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		btnSearch.setBounds(593, 380, 102, 30);
+		frmSearch.getContentPane().add(btnSearch);
+		
+		JButton btnRegister = new JButton("Cadastrar");
+		btnRegister.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent arg0) {
+				
+				String movie = txtMovieName.getText();
+				String releaseYear = (String)cboMovieYear.getSelectedItem();
+				String director = txtDirectorName.getText();
+				String dateBirth = (String)cboDay.getSelectedItem() + "/" + (String)cboMonth.getSelectedItem() + "/" + (String)cboYear.getSelectedItem();
+			
+				if (movie.contentEquals("") || releaseYear.contentEquals("")|| director.contentEquals("") || dateBirth.contentEquals("")) {
+					JOptionPane.showMessageDialog(null, "Todos os campos devem ser informados!", "Aviso", JOptionPane.WARNING_MESSAGE);
+				} 
+				else 
+				{
+					table tbl = new table(movie, releaseYear, director, dateBirth);
+					tblModel.addTableRow(tbl);
+					
+					model.setRowCount(0);
+					
+					for (int i = 0; i < tblModel.numTableRows(); i++) {
+						Object[] tableRow = {
+							tblModel.getTableRow(i).getMovie(),
+							tblModel.getTableRow(i).getReleaseYear(),
+							tblModel.getTableRow(i).getDirector(),
+							tblModel.getTableRow(i).getDateBirth()
+						};
+						
+						model.addRow(tableRow);
+					}
+
+					support.clearFields(txtMovieName, txtDirectorName);
+					btnSearch.setEnabled(true);
+				}
+			}
+			
+		});
+		
+		btnRegister.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		btnRegister.setBounds(593, 132, 102, 30);
+		frmSearch.getContentPane().add(btnRegister);
+		
+		// Clear
+		JButton btnClean = new JButton("Limpar");
+		btnClean.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				support.clearFields(txtMovieName, txtDirectorName);
+			}
+		});
+		
+		btnClean.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		btnClean.setBounds(479, 132, 102, 30);
+		frmSearch.getContentPane().add(btnClean);
+		
+		// table
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setViewportBorder(new LineBorder(Color.LIGHT_GRAY));
+		scrollPane.setBounds(21, 174, 674, 195);
+		frmSearch.getContentPane().add(scrollPane);
+		
+		tblSearch = new JTable();
+		tblSearch.setEnabled(false);
+		scrollPane.setViewportView(tblSearch);
+		model.addColumn("Filme");
+		model.addColumn("Ano Lançamento");
+		model.addColumn("Diretor");
+		model.addColumn("Data Nascimento");
+		tblSearch.setModel(model);
+		
+	}
+}

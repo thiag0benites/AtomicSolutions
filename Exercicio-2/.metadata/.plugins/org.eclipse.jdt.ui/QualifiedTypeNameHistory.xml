@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="javax.swing.JOptionPane"/>
+<fullyQualifiedTypeName name="org.apache.http.entity.StringEntity"/>
+<fullyQualifiedTypeName name="com.jayway.restassured.http.ContentType"/>
+<fullyQualifiedTypeName name="org.apache.http.client.HttpClient"/>
+<fullyQualifiedTypeName name="org.apache.http.client.methods.HttpPost"/>
+<fullyQualifiedTypeName name="org.apache.http.impl.client.HttpClientBuilder"/>
+<fullyQualifiedTypeName name="org.apache.http.HttpResponse"/>
+</qualifiedTypeNameHistroy>

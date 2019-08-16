@@ -1,0 +1,50 @@
+package api.rest;
+
+import static com.jayway.restassured.RestAssured.*;
+import static org.hamcrest.Matchers.*;
+
+import java.io.IOException;
+
+import static com.jayway.restassured.module.jsv.JsonSchemaValidator.*;
+import org.junit.Test;
+
+
+public class TestAPI {
+	
+	public TestAPI() {
+		baseURI = "https://jsonplaceholder.typicode.com/todos/";
+	}
+
+	@Test
+	public void test() {
+		
+		
+		 given()
+		 .when()
+		    .get("/1")
+		 .then()
+		    .statusCode(200)
+		    .body("userId", is(1))
+		    .body("id", is(1))
+		    .body("title", equalTo("delectus aut autem"))
+		    .body("completed", equalTo(false))
+		    .assertThat()
+		       .body(matchesJsonSchemaInClasspath("schema.json"));
+		 
+		 String[] commands = new String[2];
+		 commands[0] = "cd C:\\curlcab";
+		 commands[1] = "curl -X POST -H 'Content-type: application/json' --data '{\"text\":\"Thiago Benites. Teste AtomicSolutions\"}' https://hooks.slack.com/services/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";
+		 
+		 try {
+			 
+			for (int i = 0; i < commands.length; i++) {
+				Runtime.getRuntime().exec(commands[i]);
+			} 
+
+		} catch (IOException e) {
+			System.out.println("Não foi possível enviar mensagem ao Slack");
+			e.printStackTrace();
+		}
+	}
+
+}

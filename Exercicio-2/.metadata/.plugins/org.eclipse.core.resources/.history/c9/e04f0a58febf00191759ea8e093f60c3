@@ -1,0 +1,5 @@
+package api.slack;
+
+public class SlackMessage {
+
+}
